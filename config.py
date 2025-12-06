@@ -41,4 +41,14 @@ MATRIX_CONFIG = {
 ASSETS_DIR = BASE_DIR / "assets"
 FONTS_DIR = ASSETS_DIR / "fonts"
 IMAGES_DIR = ASSETS_DIR / "images"
-# DEFAULT_FONT = FONTS_DIR / "7x13.bdf"
+DEFAULT_FONT = FONTS_DIR / "7x13.bdf"
+
+# Matrix Configuration
+MATRIX_CONFIG = {
+    "rows": int(os.getenv("MATRIX_ROWS", 32)),
+    "cols": int(os.getenv("MATRIX_COLS", 64)),
+    "chain_length": int(os.getenv("MATRIX_CHAIN_LENGTH", 1)),
+    "parallel": int(os.getenv("MATRIX_PARALLEL", 1)),
+    "hardware_mapping": os.getenv("MATRIX_HARDWARE_MAPPING", "adafruit-hat-pwm"),
+    "gpio_slowdown": int(os.getenv("MATRIX_GPIO_SLOWDOWN", 2)),
+}

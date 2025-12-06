@@ -1,12 +1,18 @@
 {
+  "python.analysis.typeCheckingMode": "basic",
+  "python.linting.enabled": true,
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit"
-  },
+  "editor.defaultFormatter": "charliermarsh.ruff",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
   },
-  "python.analysis.typeCheckingMode": "basic"
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none"
+  },
+  "ruff.enable": true
 }
