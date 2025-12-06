@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from pathlib import Path
 
 
 @dataclass
@@ -11,6 +12,7 @@ class Team:
     location: str
     name: str
     score: int
+    badge_path: Path | None = field(default=None, repr=False)
 
     @property
     def full_name(self) -> str:
@@ -31,9 +33,12 @@ class Event:
     league_badge: str
     team_one: Team
     team_two: Team
+    league_badge_path: Path | None = field(default=None, repr=False)
 
     @property
     def is_scheduled(self) -> bool:
+        """Check if event is scheduled."""
+        return self.status_type == "STATUS_SCHEDULED"
         """Check if event is scheduled."""
         return self.status_type == "STATUS_SCHEDULED"
 
