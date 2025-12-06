@@ -1,6 +1,6 @@
-# Raspberry Pi Script
+# Raspberry Pi Script: Sports API Display
 
-Setting up the code to display the sports scores from the API.
+Setting up the code to display the sports scores from [the API](https://github.com/codemis/sports-api).
 
 ## Install Python
 
