@@ -41,7 +41,7 @@ MATRIX_CONFIG = {
 ASSETS_DIR = BASE_DIR / "assets"
 FONTS_DIR = ASSETS_DIR / "fonts"
 IMAGES_DIR = ASSETS_DIR / "images"
-DEFAULT_FONT = FONTS_DIR / "7x13.bdf"
+DEFAULT_FONT = FONTS_DIR / "5x7.bdf"  # Smaller font for more compact display
 
 # Matrix Configuration
 MATRIX_CONFIG = {

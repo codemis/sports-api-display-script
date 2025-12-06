@@ -216,36 +216,73 @@ def _show_league_screen(
 
 
 def _show_game_screen(canvas, matrix, font, event) -> None:
-    """Display game info on screen."""
+    """Display game info with team badges and scores."""
     canvas.Clear()
+
+    # Matrix dimensions
+    width = canvas.width  # 64
 
     # Text colors
     white = graphics.Color(255, 255, 255)
     green = graphics.Color(0, 255, 0)
 
-    # Display team names and scores
-    y_pos = 8
+    # Display team badges on top row
+    badge_size = 16  # Max size for badges
+    y_badge = 1
 
-    # Team 1
-    team1_text = f"{event.team_one.location[:3].upper()}"
-    graphics.DrawText(canvas, font, 2, y_pos, white, team1_text)
+    # Team 1 badge on left
+    if event.team_one.badge_path and event.team_one.badge_path.exists():
+        image1 = Image.open(event.team_one.badge_path).convert("RGB")
+        aspect_ratio = image1.width / image1.height
+
+        if aspect_ratio > 1:
+            new_width = badge_size
+            new_height = int(badge_size / aspect_ratio)
+        else:
+            new_height = badge_size
+            new_width = int(badge_size * aspect_ratio)
+
+        image1 = image1.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        canvas.SetImage(image1, 2, y_badge)
+
+    # Team 2 badge on right
+    if event.team_two.badge_path and event.team_two.badge_path.exists():
+        image2 = Image.open(event.team_two.badge_path).convert("RGB")
+        aspect_ratio = image2.width / image2.height
+
+        if aspect_ratio > 1:
+            new_width = badge_size
+            new_height = int(badge_size / aspect_ratio)
+        else:
+            new_height = badge_size
+            new_width = int(badge_size * aspect_ratio)
+
+        image2 = image2.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        # Position on right side
+        x_pos_right = width - new_width - 2
+        canvas.SetImage(image2, x_pos_right, y_badge)
+
+    # Display scores on second line: SCORE VS SCORE
+    y_text = 22
+
+    # Team 1 score (smaller, left)
     score1_text = str(event.team_one.score)
-    graphics.DrawText(canvas, font, 25, y_pos, green, score1_text)
+    graphics.DrawText(canvas, font, 18, y_text, green, score1_text)
 
-    # VS or status
-    y_pos += 10
-    graphics.DrawText(canvas, font, 2, y_pos, white, "VS")
+    # VS in center
+    graphics.DrawText(canvas, font, 28, y_text, white, "VS")
 
-    # Team 2
-    y_pos += 10
-    team2_text = f"{event.team_two.location[:3].upper()}"
-    graphics.DrawText(canvas, font, 2, y_pos, white, team2_text)
+    # Team 2 score (smaller, right)
     score2_text = str(event.team_two.score)
-    graphics.DrawText(canvas, font, 25, y_pos, green, score2_text)
+    graphics.DrawText(canvas, font, 41, y_text, green, score2_text)
 
-    # Status on right side
-    status_text = event.status[:8]  # Truncate if too long
-    graphics.DrawText(canvas, font, 35, 8, white, status_text)
+    # Display status on third line, centered
+    y_status = 31
+    status_text = event.status[:10]  # Truncate if too long
+    # Center the status text
+    text_width = len(status_text) * 6
+    status_x = (width - text_width) // 2
+    graphics.DrawText(canvas, font, status_x, y_status, white, status_text)
 
     canvas = matrix.SwapOnVSync(canvas)
 
