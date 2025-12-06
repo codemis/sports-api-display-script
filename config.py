@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file

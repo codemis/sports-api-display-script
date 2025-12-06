@@ -67,7 +67,6 @@ sudo reboot
 
 ## Demo Text Script
 
-
 ### Set Up Directory
 
 ```
@@ -267,6 +266,7 @@ chown -R [USER]:[USER] .ssh/
 
 - From a different Terminal window, try logging in.
 - Remove root ssh access
+
 ```
 sudo su
 nano /etc/ssh/sshd_config
@@ -297,3 +297,37 @@ sudo ufw enable
 
 ## Set Up the Code
 
+First you need to install all the pp libraries.
+
+```
+sudo su
+cd /opt/
+mkdir sports_display
+```
+
+Move the code into the folder.
+
+```
+cd sports_display
+python3 -m venv --system-site-packages .venv
+source ./.venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Linting
+
+You can lint check the code with the following commands:
+
+```
+# Check for issues
+ruff check .
+
+# Auto-fix issues
+ruff check --fix .
+
+# Format code
+ruff format .
+
+# Type checking
+mypy .
+```
