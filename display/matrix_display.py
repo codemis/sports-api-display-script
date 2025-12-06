@@ -170,7 +170,7 @@ def _display_on_matrix(leagues: defaultdict) -> None:
 def _show_league_screen(
     canvas, matrix, font, league_name: str, badge_path: Path | None
 ) -> None:
-    """Display league name and badge centered on screen."""
+    """Display league badge on left and name on right, vertically centered."""
     canvas.Clear()
 
     # Matrix dimensions
@@ -181,35 +181,34 @@ def _show_league_screen(
     if badge_path and badge_path.exists():
         image = Image.open(badge_path).convert("RGB")
 
-        # Resize image to fit (max 32x20 to leave room for text)
-        max_img_height = 20
+        # Resize image to fit on left side (max 28x28 to leave room for text)
+        max_size = min(28, height - 4)
         aspect_ratio = image.width / image.height
-        new_height = min(max_img_height, height - 12)  # Leave room for text
-        new_width = int(new_height * aspect_ratio)
 
-        # Limit width to matrix width
-        if new_width > width:
-            new_width = width
-            new_height = int(new_width / aspect_ratio)
+        if aspect_ratio > 1:  # Wider than tall
+            new_width = max_size
+            new_height = int(max_size / aspect_ratio)
+        else:  # Taller than wide
+            new_height = max_size
+            new_width = int(max_size * aspect_ratio)
 
         image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-        # Center the image horizontally, place near top
-        x_pos = (width - new_width) // 2
-        y_pos = 2
+        # Place image on left side, vertically centered
+        x_pos = 2
+        y_pos = (height - new_height) // 2
 
         canvas.SetImage(image, x_pos, y_pos)
 
-        # Display league name below image
-        text_y = y_pos + new_height + 8
+        # Calculate text position (right of image)
+        text_x = x_pos + new_width + 4  # 4 pixels padding
     else:
         # No image, display text in center
-        text_y = height // 2
+        text_x = (width - len(league_name) * 6) // 2
 
-    # Draw league name centered
+    # Draw league name on right side, vertically centered
     text_color = graphics.Color(255, 255, 255)
-    text_width = len(league_name) * 6  # Approximate width
-    text_x = (width - text_width) // 2
+    text_y = height // 2 + 4  # Adjust for font baseline
 
     graphics.DrawText(canvas, font, text_x, text_y, text_color, league_name)
 
