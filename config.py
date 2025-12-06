@@ -30,3 +30,8 @@ IMAGES_DIR = ASSETS_DIR / "images"
 # DEFAULT_FONT = FONTS_DIR / "7x13.bdf"
 
 # Display Settings
+# The number of seconds to display league info and each event
+LEAGUE_DISPLAY_TIME = 2  # seconds
+EVENT_DISPLAY_TIME = 2  # seconds
+# The interval to wait before retrying a failed API request
+TRY_AGAIN_INTERVAL = 60  # seconds
