@@ -4,7 +4,7 @@
 import time
 from collections import defaultdict
 
-from config import EVENT_DISPLAY_TIME, LEAGUE_DISPLAY_TIME
+from config import DISPLAY_MODE, EVENT_DISPLAY_TIME, LEAGUE_DISPLAY_TIME
 from models import SportsData
 
 
@@ -13,6 +13,8 @@ def display_scores(data: SportsData) -> None:
     Display sports scores organized by league.
     Shows league info first, then iterates through each game.
 
+    Uses DISPLAY_MODE from config to determine console or matrix output.
+
     Args:
         data: SportsData object containing events to display
     """
@@ -20,6 +22,15 @@ def display_scores(data: SportsData) -> None:
         print("No events to display")
         return
 
+    # Determine which display method to use
+    if DISPLAY_MODE == "matrix":
+        _display_on_matrix(data)
+    else:
+        _display_on_console(data)
+
+
+def _display_on_console(data: SportsData) -> None:
+    """Display scores to console for testing."""
     # Group events by league
     leagues = defaultdict(list)
     for event in data.events:
@@ -35,7 +46,7 @@ def display_scores(data: SportsData) -> None:
             print(f"Badge: {league_badge_path}")
         print("=" * 60)
 
-        # Wait 1 minute on first display of league
+        # Wait on first display of league
         print("Displaying league info...")
         time.sleep(LEAGUE_DISPLAY_TIME)
 
@@ -54,9 +65,17 @@ def display_scores(data: SportsData) -> None:
 
             print("-" * 60)
 
-            # Wait 1 minute for each game
+            # Wait for each game
             print("Displaying game...")
             time.sleep(EVENT_DISPLAY_TIME)
+
+
+def _display_on_matrix(data: SportsData) -> None:
+    """Display scores on RGB matrix."""
+    # TODO: Implement RGB matrix display logic
+    # This will use the rgbmatrix library to render to the LED matrix
+    print("Matrix display not yet implemented - falling back to console")
+    _display_on_console(data)
 
 
 if __name__ == "__main__":

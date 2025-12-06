@@ -12,6 +12,10 @@ BASE_DIR = Path(__file__).parent.absolute()
 
 # API Configuration
 API_URL = os.getenv("API_URL")
+
+# Display Mode: "console" or "matrix"
+DISPLAY_MODE = os.getenv("DISPLAY_MODE", "console").lower()
+
 # Display Settings
 # The number of seconds to display league info and each event (seconds)
 LEAGUE_DISPLAY_TIME = int(os.getenv("LEAGUE_DISPLAY_TIME", 60))

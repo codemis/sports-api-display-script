@@ -6,7 +6,7 @@ Main program for displaying sports scores in a continuous loop.
 import time
 
 from api.sports_api import fetch_scores
-from config import TRY_AGAIN_INTERVAL
+from config import DISPLAY_MODE, TRY_AGAIN_INTERVAL
 from display import display_scores
 from utils import is_sleep_time, time_until_wake
 
@@ -17,7 +17,7 @@ def main():
     Continuously fetches and displays sports scores.
     Respects sleep schedule configuration.
     """
-    print("Starting sports score display...")
+    print(f"Starting sports score display... (mode: {DISPLAY_MODE})")
 
     while True:
         try:
