@@ -297,22 +297,25 @@ sudo ufw enable
 
 ## Set Up the Code
 
-First you need to install all the pp libraries.
+First you need to clone the code.
 
 ```
 sudo su
 cd /opt/
-mkdir sports_display
+git clone https://github.com/codemis/sports-api-display-script.git
+cd sports-api-display-script/
 ```
 
-Move the code into the folder.
+Now set up the neccessary code.
 
 ```
-cd sports_display
 python3 -m venv --system-site-packages .venv
 source ./.venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env
 ```
+
+Now set the appropriate settings
 
 ### Linting
 
