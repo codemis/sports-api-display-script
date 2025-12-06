@@ -1,2 +1,6 @@
+# Standard python ignores
+__pycache__/
+*.pyc
+# Environment variables
 .env
 TODO.md
