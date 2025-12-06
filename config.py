@@ -35,3 +35,8 @@ LEAGUE_DISPLAY_TIME = 2  # seconds
 EVENT_DISPLAY_TIME = 2  # seconds
 # The interval to wait before retrying a failed API request
 TRY_AGAIN_INTERVAL = 60  # seconds
+
+# Sleep Schedule (PDT/PST - automatically handles daylight savings)
+TIMEZONE = "America/Los_Angeles"  # PDT/PST timezone
+SLEEP_START_TIME = "20:30"  # Military time
+SLEEP_END_TIME = "07:00"  # Military time
