@@ -62,6 +62,22 @@ from config import (
 from models import SportsData
 
 
+def _calculate_centered_x(text: str, width: int, char_width: int = 5) -> int:
+    """
+    Calculate the x position to center text on the display.
+
+    Args:
+        text: The text to center
+        width: The width of the display
+        char_width: Average width per character in pixels (default 5 for 5x7 font)
+
+    Returns:
+        The x position to start drawing the text
+    """
+    text_width = len(text) * char_width
+    return (width - text_width) // 2
+
+
 def _initialize_matrix() -> tuple[Any, Any]:
     """Initialize the RGB matrix and load font."""
     options = RGBMatrixOptions()
@@ -262,27 +278,42 @@ def _show_game_screen(canvas, matrix, font, event) -> None:
         x_pos_right = width - new_width - 2
         canvas.SetImage(image2, x_pos_right, y_badge)
 
-    # Display scores on second line: SCORE VS SCORE
-    y_text = 22
+    # Display scores or date/time on second line (centered)
+    y_text = 24
+    last_line_text = ""
+    if event.status_type == "STATUS_SCHEDULED":
+        # Display date and time for scheduled games
+        # Format: "Dec 7 7:30P" or similar compact format
+        info_text = f"{event.formatted_date}"
+        last_line_text = f"{event.time}"
+        info_x = _calculate_centered_x(info_text, width)
+        graphics.DrawText(canvas, font, info_x, y_text, white, info_text)
+    else:
+        # Display scores for live/completed games
+        score1_text = str(event.team_one.score)
+        score2_text = str(event.team_two.score)
+        full_score_text = f"{score1_text} - {score2_text}"
 
-    # Team 1 score (smaller, left)
-    score1_text = str(event.team_one.score)
-    graphics.DrawText(canvas, font, 18, y_text, green, score1_text)
+        # Center the entire score text
+        char_width = 5
+        start_x = _calculate_centered_x(full_score_text, width, char_width)
 
-    # VS in center
-    graphics.DrawText(canvas, font, 28, y_text, white, "VS")
+        # Draw team 1 score
+        graphics.DrawText(canvas, font, start_x, y_text, green, score1_text)
 
-    # Team 2 score (smaller, right)
-    score2_text = str(event.team_two.score)
-    graphics.DrawText(canvas, font, 41, y_text, green, score2_text)
+        # Calculate position for dash (after score1)
+        dash_x = start_x + len(score1_text) * char_width
+        graphics.DrawText(canvas, font, dash_x, y_text, white, " - ")
+
+        # Calculate position for score2 (after dash)
+        score2_x = dash_x + 3 * char_width  # " - " is 3 characters
+        graphics.DrawText(canvas, font, score2_x, y_text, green, score2_text)
+        last_line_text = event.status[:10]  # Truncate if too long
 
     # Display status on third line, centered
     y_status = 31
-    status_text = event.status[:10]  # Truncate if too long
-    # Center the status text
-    text_width = len(status_text) * 6
-    status_x = (width - text_width) // 2
-    graphics.DrawText(canvas, font, status_x, y_status, white, status_text)
+    last_line_x = _calculate_centered_x(last_line_text, width)
+    graphics.DrawText(canvas, font, last_line_x, y_status, white, last_line_text)
 
     canvas = matrix.SwapOnVSync(canvas)
 

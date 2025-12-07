@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 
@@ -39,8 +40,6 @@ class Event:
     def is_scheduled(self) -> bool:
         """Check if event is scheduled."""
         return self.status_type == "STATUS_SCHEDULED"
-        """Check if event is scheduled."""
-        return self.status_type == "STATUS_SCHEDULED"
 
     @property
     def is_in_progress(self) -> bool:
@@ -51,6 +50,23 @@ class Event:
     def is_final(self) -> bool:
         """Check if event is finished."""
         return self.status_type == "STATUS_FINAL"
+
+    @property
+    def formatted_date(self) -> str:
+        """
+        Convert date from 'Dec 07 2025' format to 'Dec 7' format.
+
+        Returns:
+            Formatted date string without leading zeros and year
+        """
+        try:
+            # Parse the date string
+            date_obj = datetime.strptime(self.date, "%b %d %Y")
+            # Format without leading zero in day
+            return date_obj.strftime("%b %-d")
+        except ValueError:
+            # If parsing fails, return original date
+            return self.date
 
 
 @dataclass
