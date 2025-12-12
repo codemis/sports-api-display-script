@@ -13,7 +13,7 @@ with contextlib.suppress(ImportError):
 
 from config import DISPLAY_MODE, EVENT_DISPLAY_TIME, LEAGUE_DISPLAY_TIME
 from models import SportsData
-from utils import calculate_centered_x, initialize_matrix
+from utils import calculate_centered_x, initialize_matrix, is_sleep_time
 
 
 def display_scores(data: SportsData) -> None:
@@ -60,6 +60,11 @@ def _display_on_console(leagues: defaultdict) -> None:
 
         # Display each game in this league
         for event in events:
+            # Check if sleep time has been reached
+            if is_sleep_time():
+                print("\nSleep time reached, stopping display...")
+                return
+
             print("\n" + "-" * 60)
             print(f"{event.team_one.full_name} vs {event.team_two.full_name}")
             print(f"Status: {event.status}")
@@ -86,6 +91,12 @@ def _display_on_matrix(leagues: defaultdict) -> None:
     try:
         # Iterate through each league
         for league_name, events in leagues.items():
+            # Check if sleep time has been reached
+            if is_sleep_time():
+                print("\nSleep time reached, stopping display...")
+                matrix.Clear()
+                return
+
             league_badge_path = events[0].league_badge_path if events else None
 
             # Display league header
@@ -94,6 +105,12 @@ def _display_on_matrix(leagues: defaultdict) -> None:
 
             # Display each game in this league
             for event in events:
+                # Check if sleep time has been reached
+                if is_sleep_time():
+                    print("\nSleep time reached, stopping display...")
+                    matrix.Clear()
+                    return
+
                 _show_game_screen(canvas, matrix, font, event)
                 time.sleep(EVENT_DISPLAY_TIME)
     except KeyboardInterrupt:
