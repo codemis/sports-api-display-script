@@ -119,8 +119,13 @@ def _display_on_matrix(leagues: defaultdict) -> None:
                     matrix.Clear()
                     return
 
+                # First show team badges for 5 seconds
+                _show_team_badges_screen(canvas, matrix, event)
+                time.sleep(5)
+
+                # Then show the full game screen
                 _show_game_screen(canvas, matrix, font, event)
-                time.sleep(EVENT_DISPLAY_TIME)
+                time.sleep(EVENT_DISPLAY_TIME - 5)
     except KeyboardInterrupt:
         print("\n\nShutting down display...")
     finally:
@@ -171,6 +176,58 @@ def _show_league_screen(
     text_y = height // 2 + 4  # Adjust for font baseline
 
     graphics.DrawText(canvas, font, text_x, text_y, text_color, league_name)
+
+    canvas = matrix.SwapOnVSync(canvas)
+
+
+def _show_team_badges_screen(canvas, matrix, event) -> None:
+    """Display team badges only - one on left, one on right."""
+    canvas.Clear()
+
+    # Matrix dimensions
+    width = canvas.width  # 64
+    height = canvas.height  # 32
+
+    # Badge size - larger since we're only showing badges
+    badge_size = 28  # Max size for badges
+
+    # Team 1 badge on left
+    if event.team_one.badge_path and event.team_one.badge_path.exists():
+        image1 = Image.open(event.team_one.badge_path).convert("RGB")
+        aspect_ratio = image1.width / image1.height
+
+        if aspect_ratio > 1:
+            new_width = badge_size
+            new_height = int(badge_size / aspect_ratio)
+        else:
+            new_height = badge_size
+            new_width = int(badge_size * aspect_ratio)
+
+        image1 = image1.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+        # Center vertically on left side
+        x_pos = 2
+        y_pos = (height - new_height) // 2
+        canvas.SetImage(image1, x_pos, y_pos)
+
+    # Team 2 badge on right
+    if event.team_two.badge_path and event.team_two.badge_path.exists():
+        image2 = Image.open(event.team_two.badge_path).convert("RGB")
+        aspect_ratio = image2.width / image2.height
+
+        if aspect_ratio > 1:
+            new_width = badge_size
+            new_height = int(badge_size / aspect_ratio)
+        else:
+            new_height = badge_size
+            new_width = int(badge_size * aspect_ratio)
+
+        image2 = image2.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+        # Center vertically on right side
+        x_pos_right = width - new_width - 2
+        y_pos = (height - new_height) // 2
+        canvas.SetImage(image2, x_pos_right, y_pos)
 
     canvas = matrix.SwapOnVSync(canvas)
 
