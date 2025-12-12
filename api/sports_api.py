@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 #  To test this code run `python3 -m api.sports_api` from the project root directory.
+from datetime import datetime, timedelta
+
 import requests
 
 from config import API_URL, IMAGES_DIR
@@ -73,6 +75,17 @@ def fetch_scores() -> SportsData | None:
                 team_two=team_two,
                 league_badge_path=league_badge_path,
             )
+
+            # Skip events that are more than 1 week away
+            try:
+                event_date = datetime.strptime(event.date, "%b %d %Y")
+                one_week_from_now = datetime.now() + timedelta(weeks=1)
+                if event_date > one_week_from_now:
+                    continue
+            except ValueError:
+                # If date parsing fails, include the event anyway
+                pass
+
             events.append(event)
 
         return SportsData(events=events)
