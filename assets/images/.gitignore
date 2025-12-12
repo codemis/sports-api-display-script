@@ -1,3 +1,6 @@
 # Ignore everything in this directory except the .gitignore file itself
 *
 !.gitignore
+!other/
+!other/moon.png
+!other/sun.png

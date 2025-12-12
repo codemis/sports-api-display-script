@@ -8,6 +8,7 @@ import time
 from api.sports_api import fetch_scores
 from config import DISPLAY_MODE, TRY_AGAIN_INTERVAL
 from display import display_scores
+from display.sleep_messages import show_goodnight_message
 from utils import is_sleep_time, time_until_wake
 
 
@@ -28,6 +29,11 @@ def main():
                 minutes = (sleep_seconds % 3600) // 60
                 print("\n💤 Sleep mode - Display off until wake time")
                 print(f"Sleeping for {hours}h {minutes}m...")
+
+                # Show goodnight message on matrix before sleeping
+                if DISPLAY_MODE == "matrix":
+                    show_goodnight_message()
+
                 time.sleep(sleep_seconds)
                 print("🌅 Wake time - Resuming display...")
                 continue

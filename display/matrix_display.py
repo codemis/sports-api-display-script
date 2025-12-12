@@ -1,100 +1,19 @@
 #!/usr/bin/env python3
 """Display module for showing sports scores."""
 
+import contextlib
 import time  # noqa: I001
 from collections import defaultdict
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
 
 from PIL import Image
 
-# Conditional import - only import rgbmatrix on Raspberry Pi
-try:
-    from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+with contextlib.suppress(ImportError):
+    from rgbmatrix import graphics
 
-    HAS_MATRIX = True
-except ImportError:
-    HAS_MATRIX = False
-    # Create dummy types for type checking
-    if TYPE_CHECKING:
-        from typing import Any as RGBMatrix
-
-        class RGBMatrixOptions:  # noqa: N801
-            """Dummy RGBMatrixOptions class for type checking."""
-
-            rows: int
-            cols: int
-            chain_length: int
-            parallel: int
-            hardware_mapping: str
-            gpio_slowdown: int
-
-        class graphics:  # noqa: N801
-            """Dummy graphics class for type checking."""
-
-            class Font:
-                """Dummy Font class for type checking."""
-
-                def LoadFont(self, path: str) -> bool:  # noqa: N802
-                    """Dummy LoadFont method."""
-                    return True
-
-            @staticmethod
-            def Color(r: int, g: int, b: int) -> Any:  # noqa: N802
-                """Dummy Color method."""
-                pass
-
-            @staticmethod
-            def DrawText(  # noqa: N802
-                canvas: Any, font: Any, x: int, y: int, color: Any, text: str
-            ) -> None:  # noqa: N802
-                """Dummy DrawText method."""
-                pass
-
-
-from config import (
-    DEFAULT_FONT,
-    DISPLAY_MODE,
-    EVENT_DISPLAY_TIME,
-    LEAGUE_DISPLAY_TIME,
-    MATRIX_CONFIG,
-)
+from config import DISPLAY_MODE, EVENT_DISPLAY_TIME, LEAGUE_DISPLAY_TIME
 from models import SportsData
-
-
-def _calculate_centered_x(text: str, width: int, char_width: int = 5) -> int:
-    """
-    Calculate the x position to center text on the display.
-
-    Args:
-        text: The text to center
-        width: The width of the display
-        char_width: Average width per character in pixels (default 5 for 5x7 font)
-
-    Returns:
-        The x position to start drawing the text
-    """
-    text_width = len(text) * char_width
-    return (width - text_width) // 2
-
-
-def _initialize_matrix() -> tuple[Any, Any]:
-    """Initialize the RGB matrix and load font."""
-    options = RGBMatrixOptions()
-    options.rows = MATRIX_CONFIG["rows"]
-    options.cols = MATRIX_CONFIG["cols"]
-    options.chain_length = MATRIX_CONFIG["chain_length"]
-    options.parallel = MATRIX_CONFIG["parallel"]
-    options.hardware_mapping = MATRIX_CONFIG["hardware_mapping"]
-    options.gpio_slowdown = MATRIX_CONFIG["gpio_slowdown"]
-
-    matrix = RGBMatrix(options=options)
-
-    # Load font
-    font = graphics.Font()
-    font.LoadFont(str(DEFAULT_FONT))
-
-    return matrix, font
+from utils import calculate_centered_x, initialize_matrix
 
 
 def display_scores(data: SportsData) -> None:
@@ -161,7 +80,7 @@ def _display_on_console(leagues: defaultdict) -> None:
 
 def _display_on_matrix(leagues: defaultdict) -> None:
     """Display scores on RGB matrix."""
-    matrix, font = _initialize_matrix()
+    matrix, font = initialize_matrix()
     canvas = matrix.CreateFrameCanvas()
 
     try:
@@ -286,7 +205,7 @@ def _show_game_screen(canvas, matrix, font, event) -> None:
         # Format: "Dec 7 7:30P" or similar compact format
         info_text = f"{event.formatted_date}"
         last_line_text = f"{event.time}"
-        info_x = _calculate_centered_x(info_text, width)
+        info_x = calculate_centered_x(info_text, width)
         graphics.DrawText(canvas, font, info_x, y_text, white, info_text)
     else:
         # Display scores for live/completed games
@@ -296,7 +215,7 @@ def _show_game_screen(canvas, matrix, font, event) -> None:
 
         # Center the entire score text
         char_width = 5
-        start_x = _calculate_centered_x(full_score_text, width, char_width)
+        start_x = calculate_centered_x(full_score_text, width, char_width)
 
         # Draw team 1 score
         graphics.DrawText(canvas, font, start_x, y_text, green, score1_text)
@@ -317,7 +236,7 @@ def _show_game_screen(canvas, matrix, font, event) -> None:
 
     # Display status on third line, centered
     y_status = 31
-    last_line_x = _calculate_centered_x(last_line_text, width)
+    last_line_x = calculate_centered_x(last_line_text, width)
     graphics.DrawText(canvas, font, last_line_x, y_status, white, last_line_text)
 
     canvas = matrix.SwapOnVSync(canvas)
