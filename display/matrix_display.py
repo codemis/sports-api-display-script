@@ -308,7 +308,12 @@ def _show_game_screen(canvas, matrix, font, event) -> None:
         # Calculate position for score2 (after dash)
         score2_x = dash_x + 3 * char_width  # " - " is 3 characters
         graphics.DrawText(canvas, font, score2_x, y_text, green, score2_text)
-        last_line_text = event.status[:10]  # Truncate if too long
+
+        # Determine last line text based on status
+        if event.status_type == "STATUS_FINAL":
+            last_line_text = event.winner_text
+        else:
+            last_line_text = event.status[:10]  # Truncate if too long
 
     # Display status on third line, centered
     y_status = 31

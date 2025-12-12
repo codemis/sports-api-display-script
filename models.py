@@ -68,6 +68,21 @@ class Event:
             # If parsing fails, return original date
             return self.date
 
+    @property
+    def winner_text(self) -> str:
+        """
+        Get the winner text for a final game.
+
+        Returns:
+            Text displaying the winner's name or "Tie!" if scores are equal
+        """
+        if self.team_one.score > self.team_two.score:
+            return f"{self.team_one.name} win!"
+        elif self.team_two.score > self.team_one.score:
+            return f"{self.team_two.name} win!"
+        else:
+            return "Tie!"
+
 
 @dataclass
 class SportsData:
