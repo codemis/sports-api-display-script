@@ -45,6 +45,7 @@ def fetch_scores() -> SportsData | None:
                 badge=team_one_data.get("badge", ""),
                 location=team_one_data.get("location", ""),
                 name=team_one_data.get("name", ""),
+                abbreviation=team_one_data.get("abbreviation", ""),
                 score=team_one_data.get("score", 0),
                 badge_path=team_one_badge_path,
             )
@@ -53,6 +54,7 @@ def fetch_scores() -> SportsData | None:
                 badge=team_two_data.get("badge", ""),
                 location=team_two_data.get("location", ""),
                 name=team_two_data.get("name", ""),
+                abbreviation=team_two_data.get("abbreviation", ""),
                 score=team_two_data.get("score", 0),
                 badge_path=team_two_badge_path,
             )

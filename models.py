@@ -12,6 +12,7 @@ class Team:
     badge: str
     location: str
     name: str
+    abbreviation: str
     score: int
     badge_path: Path | None = field(default=None, repr=False)
 
