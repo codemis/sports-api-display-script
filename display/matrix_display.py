@@ -46,6 +46,10 @@ def _display_on_console(leagues: defaultdict) -> None:
     """Display scores to console for testing."""
     # Iterate through each league
     for league_name, events in leagues.items():
+        # Skip if no events in this league
+        if not events:
+            continue
+
         # Display league header
         league_badge_path = events[0].league_badge_path if events else None
         print("\n" + "=" * 60)
@@ -91,6 +95,10 @@ def _display_on_matrix(leagues: defaultdict) -> None:
     try:
         # Iterate through each league
         for league_name, events in leagues.items():
+            # Skip if no events in this league
+            if not events:
+                continue
+
             # Check if sleep time has been reached
             if is_sleep_time():
                 print("\nSleep time reached, stopping display...")
