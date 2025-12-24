@@ -15,7 +15,7 @@ I used this [3d printed case](https://www.thingiverse.com/thing:3932025). It wor
 ## Equipment
 
 - Raspberry Pi 3B - Running latest Raspberry Pi OS Lite.
-- [3d printed case](https://www.thingiverse.com/thing:3932025)
+- [3d printed case](https://www.thingiverse.com/thing:3932025) - I printed the case with [Chunks3D](https://www.chunks3d.com/) for $31.52
 - [Adafruit RGB Matrix Bonnet](https://www.adafruit.com/product/3211)
 - [Adafruit 64X32 RGB LED Matrix - 4 MM Pitch](https://www.adafruit.com/product/2278)
 - [5V 10A Power Supply](https://www.amazon.com/dp/B0D76F4W1C?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1)
@@ -336,7 +336,31 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Now set the appropriate settings
+Now set the appropriate settings in your .env file.
+
+## Autorun Code
+
+We need to set up Systemd to run our code. There is a configuration file in this code base called `sports-board.service`. First you need to copy the file to the right directory:
+
+```
+sudo su
+cp /opt/sports-api-display-script/sports-board.service /etc/systemd/system/sports-board.service
+```
+
+Now load the service:
+
+```
+sudo su
+systemctl daemon-reload
+systemctl enable --now sports-board.service
+```
+
+You can check the status with the following commands:
+
+```
+systemctl status sports-board.service
+journalctl -u sports-board.service -f
+```
 
 ### Linting
 
