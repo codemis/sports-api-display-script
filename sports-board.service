@@ -1,0 +1,21 @@
+[Unit]
+Description=Sports Board Python Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/sports-api-display-script
+ExecStart=/opt/sports-api-display-script/.venv/bin/python /opt/sports-api-display-script/main.py
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=20
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
