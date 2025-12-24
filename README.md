@@ -2,6 +2,27 @@
 
 Setting up the code to display the sports scores from [the API](https://github.com/codemis/sports-api).
 
+## Important Notes
+
+When I first built it, I acidentally moved the bonnet when it was powered on. This killed the Rapsberry Pi GPIO pin, and made the screen display a big block of red. Make sure to power down before moving anything.
+
+I used this [3d printed case](https://www.thingiverse.com/thing:3932025). It works with a Raspberry Pi 3B and a 4mm pitch matrix display. There are a few changes I would like to make.
+
+1. Need a better way to route power. The power supply I picked could not use the holes.
+2. I had to mount the pi backwards because the USB ports do not align with the holes on the side.
+3. I also had to break the three holes for the power supply to mount correctly.
+
+## Equipment
+
+- Raspberry Pi 3B - Running latest Raspberry Pi OS Lite.
+- [3d printed case](https://www.thingiverse.com/thing:3932025)
+- [Adafruit RGB Matrix Bonnet](https://www.adafruit.com/product/3211)
+- [Adafruit 64X32 RGB LED Matrix - 4 MM Pitch](https://www.adafruit.com/product/2278)
+- [5V 10A Power Supply](https://www.amazon.com/dp/B0D76F4W1C?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1)
+
+
+The case uses 50MM M3 bolts.
+
 ## Install Python
 
 First install all necessary libraries.
