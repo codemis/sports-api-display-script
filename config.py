@@ -29,7 +29,7 @@ SLEEP_END_TIME = os.getenv("SLEEP_END_TIME", "07:00")
 
 # Matrix Configuration
 MATRIX_CONFIG = {
-    "brightness": int(os.getenv("DISPLAY_BRIGHTNESS", 70)),
+    "brightness": 70,
     "rows": 32,
     "cols": 64,
     "chain_length": 1,
@@ -46,7 +46,7 @@ DEFAULT_FONT = FONTS_DIR / "5x7.bdf"  # Smaller font for more compact display
 
 # Matrix Configuration
 MATRIX_CONFIG = {
-    "brightness": DISPLAY_BRIGHTNESS,
+    "brightness": int(os.getenv("DISPLAY_BRIGHTNESS", 70)),
     "rows": int(os.getenv("MATRIX_ROWS", 32)),
     "cols": int(os.getenv("MATRIX_COLS", 64)),
     "chain_length": int(os.getenv("MATRIX_CHAIN_LENGTH", 1)),
