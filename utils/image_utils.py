@@ -5,6 +5,7 @@ import hashlib
 from pathlib import Path
 
 import requests
+from PIL import Image
 
 
 def get_or_download_image(url: str, save_dir: Path) -> Path | None:
@@ -46,6 +47,26 @@ def get_or_download_image(url: str, save_dir: Path) -> Path | None:
         with open(filepath, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
+
+        # If the downloaded image has transparency, composite it onto a white background
+        try:
+            img = Image.open(filepath)
+            has_alpha = img.mode in ("RGBA", "LA") or ("transparency" in img.info)
+            if has_alpha:
+                bg = Image.new("RGB", img.size, (255, 255, 255))
+                if img.mode in ("RGBA", "LA"):
+                    bg.paste(img, mask=img.split()[-1])
+                else:
+                    bg.paste(img)
+                bg.save(filepath)
+            else:
+                # Ensure saved image is RGB (no alpha channel lingering)
+                if img.mode != "RGB":
+                    img.convert("RGB").save(filepath)
+        except Exception:
+            # If Pillow can't process it for any reason,
+            # leave the raw file as downloaded
+            pass
 
         return filepath
 
