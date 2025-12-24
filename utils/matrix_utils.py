@@ -17,6 +17,7 @@ except ImportError:
         class RGBMatrixOptions:  # noqa: N801
             """Dummy RGBMatrixOptions class for type checking."""
 
+            brightness: int
             rows: int
             cols: int
             chain_length: int
@@ -53,6 +54,7 @@ from config import DEFAULT_FONT, MATRIX_CONFIG
 def initialize_matrix() -> tuple[Any, Any]:
     """Initialize the RGB matrix and load font."""
     options = RGBMatrixOptions()
+    options.brightness = MATRIX_CONFIG["brightness"]
     options.rows = MATRIX_CONFIG["rows"]
     options.cols = MATRIX_CONFIG["cols"]
     options.chain_length = MATRIX_CONFIG["chain_length"]
