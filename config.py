@@ -15,7 +15,6 @@ API_URL = os.getenv("API_URL")
 
 # Display Mode: "console" or "matrix"
 DISPLAY_MODE = os.getenv("DISPLAY_MODE", "console").lower()
-DISPLAY_BRIGHTNESS = int(os.getenv("DISPLAY_BRIGHTNESS", 70))
 
 # Display Settings
 # The number of seconds to display league info and each event (seconds)
@@ -30,7 +29,7 @@ SLEEP_END_TIME = os.getenv("SLEEP_END_TIME", "07:00")
 
 # Matrix Configuration
 MATRIX_CONFIG = {
-    "brightness": DISPLAY_BRIGHTNESS,
+    "brightness": int(os.getenv("DISPLAY_BRIGHTNESS", 70)),
     "rows": 32,
     "cols": 64,
     "chain_length": 1,
@@ -47,6 +46,7 @@ DEFAULT_FONT = FONTS_DIR / "5x7.bdf"  # Smaller font for more compact display
 
 # Matrix Configuration
 MATRIX_CONFIG = {
+    "brightness": DISPLAY_BRIGHTNESS,
     "rows": int(os.getenv("MATRIX_ROWS", 32)),
     "cols": int(os.getenv("MATRIX_COLS", 64)),
     "chain_length": int(os.getenv("MATRIX_CHAIN_LENGTH", 1)),
