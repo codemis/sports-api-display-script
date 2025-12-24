@@ -78,11 +78,13 @@ def fetch_scores() -> SportsData | None:
                 league_badge_path=league_badge_path,
             )
 
-            # Skip events that are more than 1 week away
+            # Only include events within one week before today and one week after today
             try:
                 event_date = datetime.strptime(event.date, "%b %d %Y")
-                one_week_from_now = datetime.now() + timedelta(weeks=1)
-                if event_date > one_week_from_now:
+                now = datetime.now()
+                window_start = now - timedelta(weeks=1)
+                window_end = now + timedelta(weeks=1)
+                if event_date < window_start or event_date > window_end:
                     continue
             except ValueError:
                 # If date parsing fails, include the event anyway
