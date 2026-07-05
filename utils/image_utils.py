@@ -50,26 +50,26 @@ def get_or_download_image(url: str, save_dir: Path) -> Path | None:
 
         # If the downloaded image has transparency, composite it onto a white background
         try:
-            img = Image.open(filepath)
-            has_alpha = img.mode in ("RGBA", "LA") or ("transparency" in img.info)
-            if has_alpha:
-                bg = Image.new("RGB", img.size, (255, 255, 255))
-                if img.mode in ("RGBA", "LA"):
-                    bg.paste(img, mask=img.split()[-1])
+            with Image.open(filepath) as img:
+                has_alpha = img.mode in ("RGBA", "LA") or ("transparency" in img.info)
+                if has_alpha:
+                    bg = Image.new("RGB", img.size, (255, 255, 255))
+                    if img.mode in ("RGBA", "LA"):
+                        bg.paste(img, mask=img.split()[-1])
+                    else:
+                        bg.paste(img)
+                    bg.save(filepath)
                 else:
-                    bg.paste(img)
-                bg.save(filepath)
-            else:
-                # Ensure saved image is RGB (no alpha channel lingering)
-                if img.mode != "RGB":
-                    img.convert("RGB").save(filepath)
-        except Exception:
+                    # Ensure saved image is RGB (no alpha channel lingering)
+                    if img.mode != "RGB":
+                        img.convert("RGB").save(filepath)
+        except Exception as e:
+            print(f"Error processing image {filepath}: {e}")
             # If Pillow can't process it for any reason,
             # leave the raw file as downloaded
             pass
 
         return filepath
 
-    except requests.RequestException as e:
-        print(f"Error downloading image from {url}: {e}")
-        return None
+    except (requests.RequestException, OSError) as e:
+        print(f"Error downloading or saving image from {url} to {filepath}: {e}")
