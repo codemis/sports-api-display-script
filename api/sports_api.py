@@ -83,7 +83,7 @@ def fetch_scores() -> SportsData | None:
                 event_date = datetime.strptime(event.date, "%b %d %Y")
                 now = datetime.now()
                 window_start = now - timedelta(weeks=1)
-                window_end = now + timedelta(weeks=1)
+                window_end = now + timedelta(weeks=2)
                 if event_date < window_start or event_date > window_end:
                     continue
             except ValueError:
