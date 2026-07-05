@@ -17,6 +17,11 @@ TimeoutStopSec=20
 StandardOutput=journal
 StandardError=journal
 Environment=PYTHONUNBUFFERED=1
+# Grant the capability to set realtime priority
+AmbientCapabilities=CAP_SYS_NICE
+# Raise the limit for Real-Time Priority
+LimitRTPRIO=99
+LimitRTTIME=infinity
 
 [Install]
 WantedBy=multi-user.target
