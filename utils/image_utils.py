@@ -28,7 +28,9 @@ def get_or_download_image(url: str, save_dir: Path) -> Path | None:
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # Create filename from URL hash + extension
+    print(f"Getting image: {url}")
     url_hash = hashlib.md5(url.encode()).hexdigest()
+    print(f"hash: {url_hash}")
     extension = url.split(".")[-1].split("?")[0]  # Handle query params
     if extension not in ["png", "jpg", "jpeg", "gif", "bmp"]:
         extension = "png"  # Default extension
